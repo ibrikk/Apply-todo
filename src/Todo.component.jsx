@@ -20,7 +20,7 @@ function Todo(props) {
                 <ListItem>
                     <ListItemAvatar>
                     </ListItemAvatar>
-                    <ListItemText primary={props.data.getTask()} secondary='Dummy Deadline ⏰' />
+                    <ListItemText primary={ props.data ? props.data.getTask() : ''} secondary='Dummy Deadline ⏰' />
                 </ListItem>
                 <button onClick={e => props.handleOpen(props.data.getId())}> Edit </button>
                 <DeleteForeverIcon onClick={e => props.deleteTodo(props.data.getId())} />

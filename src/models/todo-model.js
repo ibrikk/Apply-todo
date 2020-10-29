@@ -3,6 +3,7 @@ class TodoModel {
         this.task = task;
         this.timestamp = timestamp;
         this.id = id;
+        
     }
 
     getTask() {

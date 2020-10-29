@@ -26,12 +26,12 @@ function App() {
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState('');
   const [openId, setOpenId] = useState(null);
-
   const [open, setOpen] = useState(false);
 
   const getTaskById = (id) => {
+   
     const todo = todos.find(obj => {
-      if (obj.getId() === id) {
+      if (obj && obj.getId() === id) {
         return true;
       } else {
         return false;
@@ -53,9 +53,9 @@ function App() {
     setOpenId(null);
   }
 
-  const updateInput = (value) => {
-    if (value !== input) {
-      setInput(value);
+  const updateInput = (event) => {
+    if (event.target.value !== input) {
+      setInput(event.target.value);
     }
   }
 
@@ -76,6 +76,10 @@ function App() {
 
   useEffect(() => {
     // this code here... fires when the app.js loads
+    getAll()
+  }, []);
+
+  const getAll = () => {
     db.collection('todos').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
 
       let modelArr = snapshot.docs.map(item => {
@@ -84,7 +88,7 @@ function App() {
       })
       setTodos(modelArr);
     })
-  }, []);
+  } 
 
   const addTodo = (e) => {
     //this will fire off when we click the button
@@ -95,11 +99,13 @@ function App() {
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }); // this was hard
 
-    setTodos([...todos, input]);
+    // const newTodo = new 
+    // setTodos([...todos, input]);
+    getAll();
     setInput(''); // clear-up the input field
 
   }
-  const modalObj = (<Modal open={open} onClose={e => handleClose()}>
+  const modalObj = <Modal open={open} onClose={e => handleClose()}>
 
     <div className={classes.paper}>
       <h1> Edit To-Do </h1>
@@ -107,14 +113,14 @@ function App() {
         <div>
           <TextField id="filled-name" label="Name"
             defaultValue={getTaskById(openId)}
-            onChange={updateInput(openId)} />
+            onChange={updateInput} />
         </div>
 
       </form>
       <Button onClick={e => updateTodo(openId)}> Update Todo </Button>
     </div>
 
-  </Modal>);
+  </Modal>;
 
   return (
     <div className="App">
@@ -124,8 +130,8 @@ function App() {
       <img alt='ApplyBoardLogo' src={Logo} />
 
       <h1> Apply To-Do ✅ </h1>
-      <TextField id="filled-basic" label="What's next ❓" variant="filled" />
-      <Button className='Add-button' color="secondary" onClick={addTodo}> Add Todo </Button>
+      <TextField id="filled-basic" label="What's next ❓" variant="filled" value={input} onChange={updateInput} />
+      <Button className='Add-button' color="secondary" onClick={addTodo}> Add Todo </Button> 
       {/* <form>
        <FormControl>
           <InputLabel> ✅ What's Next? </InputLabel>
